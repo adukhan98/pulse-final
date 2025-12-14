@@ -18,11 +18,11 @@ export const MOOD_COLORS: Record<MoodRating, string> = {
 };
 
 export const MOOD_GRADIENTS: Record<MoodRating, string> = {
-  1: "from-rose-400 to-red-500 shadow-rose-200",
-  2: "from-orange-400 to-rose-400 shadow-orange-200",
-  3: "from-amber-300 to-orange-400 shadow-amber-200",
-  4: "from-emerald-400 to-emerald-600 shadow-emerald-200",
-  5: "from-cyan-400 to-blue-500 shadow-cyan-200",
+  1: "from-rose-300 to-orange-300 shadow-rose-100",
+  2: "from-orange-200 to-amber-200 shadow-orange-100",
+  3: "from-stone-300 to-stone-400 shadow-stone-200", // Neutral for "Okay"
+  4: "from-emerald-300 to-teal-300 shadow-emerald-100",
+  5: "from-sky-300 to-indigo-300 shadow-sky-100",
 };
 
 export const SCREEN_TIME_OPTIONS = [

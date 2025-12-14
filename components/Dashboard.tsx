@@ -11,8 +11,8 @@ interface DashboardProps {
   currentSuggestionId: string;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ 
-  entries, 
+const Dashboard: React.FC<DashboardProps> = ({
+  entries,
   onSaveEntry,
   onViewInsights,
   currentSuggestionId,
@@ -75,236 +75,227 @@ const Dashboard: React.FC<DashboardProps> = ({
     }
 
     return (
-        <div className="pt-10 px-6 space-y-8 pb-32">
-          <header className="space-y-1 animate-enter">
-            <h2 className="text-xs font-semibold text-secondary uppercase tracking-widest">{formattedDate}</h2>
-            <h1 className="text-3xl font-semibold tracking-tight text-primary">All caught up.</h1>
-          </header>
+      <div className="pt-12 px-6 space-y-8 pb-32 max-w-lg mx-auto">
+        <header className="space-y-1 animate-enter text-center">
+          <h2 className="text-xs font-semibold text-secondary/80 uppercase tracking-[0.2em]">{formattedDate}</h2>
+          <h1 className="text-3xl font-[350] tracking-tight text-primary">Log complete.</h1>
+        </header>
 
-          <div className="bg-surface rounded-[32px] p-8 shadow-soft text-center space-y-6 relative overflow-hidden animate-enter-delay transition-all duration-500 ease-out hover:shadow-float hover:-translate-y-1">
-             <div className="w-20 h-20 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-sm ring-4 ring-green-50/50">
-               <Check size={36} strokeWidth={3} />
-             </div>
-             <div>
-               <h3 className="text-xl font-semibold text-primary mb-2">Logged for today</h3>
-               <p className="text-secondary text-sm leading-relaxed max-w-[200px] mx-auto">
-                 Great job keeping up with your daily rhythm.
-               </p>
-             </div>
-             <button 
-                onClick={() => setIsEditMode(true)}
-                className="inline-flex items-center gap-2 text-primary font-medium text-sm px-4 py-2 rounded-full bg-slate-50 hover:bg-slate-100 transition-all border border-slate-100 hover:scale-105 active:scale-95"
-              >
-                <Edit2 size={14} /> Edit Response
-             </button>
+        <div className="glass-panel p-8 rounded-[40px] text-center space-y-8 relative overflow-hidden animate-enter-delay transition-all duration-700 hover:shadow-float">
+          <div className="w-24 h-24 bg-emerald-50 text-emerald-600/80 rounded-full flex items-center justify-center mx-auto shadow-sm ring-8 ring-emerald-50/30">
+            <Check size={40} strokeWidth={2.5} />
           </div>
+          <div>
+            <h3 className="text-xl font-medium text-primary mb-3">All set for today</h3>
+            <p className="text-secondary text-base font-light leading-relaxed max-w-[220px] mx-auto">
+              See you tomorrow.
+            </p>
+          </div>
+          <button
+            onClick={() => setIsEditMode(true)}
+            className="inline-flex items-center gap-2 text-stone-500 font-medium text-xs uppercase tracking-widest px-6 py-3 rounded-full bg-stone-100/50 hover:bg-stone-200/50 transition-all border border-stone-200/50"
+          >
+            <Edit2 size={12} /> Edit
+          </button>
+        </div>
 
-          <section className="bg-surface p-6 rounded-[32px] shadow-soft animate-enter-delay transition-all duration-500 ease-out hover:shadow-float hover:-translate-y-1" style={{ animationDelay: '0.2s' }}>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-sm font-semibold text-secondary">This Week</h2>
-              <button onClick={onViewInsights} className="text-indigo-600 text-sm font-medium flex items-center hover:opacity-80 transition-opacity">
-                Insights <ChevronRight size={16} />
+        <section className="glass-panel p-6 rounded-[36px] animate-enter-delay transition-all duration-500 ease-out hover:shadow-float" style={{ animationDelay: '0.2s' }}>
+          <div className="flex justify-between items-center mb-8 px-2">
+            <h2 className="text-sm font-semibold text-primary/70">Past 7 Days</h2>
+            <button onClick={onViewInsights} className="text-stone-400 text-xs font-bold uppercase tracking-widest flex items-center hover:text-stone-600 transition-colors">
+              Insights <ChevronRight size={14} className="ml-1" />
+            </button>
+          </div>
+          <div className="flex justify-between items-end h-20 px-2">
+            {weekData.map((day, idx) => (
+              <div key={idx} className="flex flex-col items-center gap-3 h-full justify-end group cursor-default">
+                <div
+                  className={`w-3 rounded-full transition-all duration-700 ${day.entry
+                      ? `h-full bg-gradient-to-t ${MOOD_GRADIENTS[day.entry.mood]} opacity-90 group-hover:scale-x-125 shadow-sm`
+                      : 'h-1.5 bg-stone-200/50'
+                    }`}
+                ></div>
+                <span className={`text-[9px] font-bold tracking-widest uppercase ${day.date.toISOString().split('T')[0] === today ? 'text-primary' : 'text-stone-300'}`}>
+                  {day.date.toLocaleDateString('en-US', { weekday: 'narrow' })}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Calming Recommendation Card */}
+        <section className="relative overflow-hidden rounded-[40px] p-8 text-stone-800 shadow-soft-xl group animate-enter-delay transition-all duration-700 hover:shadow-2xl" style={{ animationDelay: '0.3s' }}>
+          <div className="absolute inset-0 bg-gradient-to-br from-stone-100 to-stone-200 opacity-90"></div>
+          <div className="absolute inset-0 bg-white/40"></div>
+
+          <div className="relative z-10 flex flex-col gap-8">
+            <div className="flex items-center gap-2 opacity-60">
+              <div className="p-1.5 bg-stone-900/5 rounded-full backdrop-blur-md">
+                <Sparkles size={14} className="text-stone-600" />
+              </div>
+              <span className="text-xs font-bold uppercase tracking-widest text-stone-600">Daily Nudge</span>
+            </div>
+
+            <p className="text-2xl font-[350] leading-snug tracking-tight text-primary drop-shadow-sm">
+              "{suggestion.text}"
+            </p>
+
+            <div className="flex gap-4 pt-2">
+              <button
+                onClick={onDismissSuggestion}
+                className="bg-stone-900 text-stone-50 px-8 py-3 rounded-full text-sm font-medium shadow-lg hover:shadow-xl hover:scale-105 transition-all active:scale-95"
+              >
+                Okay
+              </button>
+              <button
+                onClick={onDismissSuggestion}
+                className="text-stone-400 hover:text-stone-600 px-4 py-3 text-sm font-medium transition-all"
+              >
+                Pass
               </button>
             </div>
-            <div className="flex justify-between items-end h-16 px-1">
-              {weekData.map((day, idx) => (
-                <div key={idx} className="flex flex-col items-center gap-3 h-full justify-end group cursor-default">
-                    <div 
-                      className={`w-3.5 rounded-full transition-all duration-500 ${
-                        day.entry 
-                          ? `h-full bg-gradient-to-t ${MOOD_GRADIENTS[day.entry.mood]} opacity-90 group-hover:scale-x-110 shadow-sm`
-                          : 'h-2 bg-slate-100'
-                      }`}
-                    ></div>
-                    <span className={`text-[10px] font-bold tracking-wide uppercase ${day.date.toISOString().split('T')[0] === today ? 'text-primary' : 'text-slate-300'}`}>
-                      {day.date.toLocaleDateString('en-US', { weekday: 'narrow' })}
-                    </span>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* New Aesthetic Recommendation Card - Green/Teal Variant */}
-          <section className="relative overflow-hidden rounded-[32px] p-8 text-white shadow-lg shadow-emerald-200/50 group animate-enter-delay transition-all duration-500 hover:shadow-xl hover:scale-[1.02]" style={{ animationDelay: '0.3s' }}>
-            {/* Dynamic Gradient Background */}
-            <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 via-teal-600 to-emerald-600 transition-transform duration-700 group-hover:scale-110"></div>
-            
-            {/* Texture/Noise */}
-            <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
-
-            <div className="relative z-10 flex flex-col gap-6">
-              <div className="flex items-center gap-2 opacity-90">
-                <div className="p-1.5 bg-white/20 rounded-full backdrop-blur-md">
-                   <Sparkles size={14} className="text-white" />
-                </div>
-                <span className="text-xs font-bold uppercase tracking-widest text-white/90">Daily Focus</span>
-              </div>
-              
-              <p className="text-2xl font-medium leading-snug tracking-tight text-white drop-shadow-sm">
-                "{suggestion.text}"
-              </p>
-              
-              <div className="flex gap-4 pt-2">
-                <button 
-                  onClick={onDismissSuggestion}
-                  className="bg-white/95 text-teal-900 px-6 py-3 rounded-full text-sm font-bold shadow-sm hover:bg-white transition-all active:scale-95 hover:scale-105 hover:shadow-lg"
-                >
-                  Complete
-                </button>
-                <button 
-                  onClick={onDismissSuggestion}
-                  className="text-white/70 hover:text-white px-4 py-3 text-sm font-medium transition-all hover:scale-105 active:scale-95"
-                >
-                  Dismiss
-                </button>
-              </div>
-            </div>
-            
-            {/* Subtle Abstract Glows */}
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/20 rounded-full blur-[50px] pointer-events-none transition-transform duration-700 group-hover:translate-x-4 group-hover:-translate-y-4"></div>
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-emerald-400/30 rounded-full blur-[40px] pointer-events-none mix-blend-overlay transition-transform duration-700 group-hover:-translate-x-4 group-hover:translate-y-4"></div>
-          </section>
-        </div>
+          </div>
+        </section>
+      </div>
     )
   }
 
   // === CHECK-IN FORM (Main View) ===
   return (
-    <div className="pt-10 px-6 space-y-8 pb-32">
-      
-      <header className="space-y-1 animate-enter">
-        <h2 className="text-xs font-semibold text-secondary uppercase tracking-widest">{formattedDate}</h2>
-        <h1 className="text-3xl font-semibold tracking-tight text-primary">{getGreeting()}, User.</h1>
+    <div className="pt-12 px-6 space-y-8 pb-32 max-w-lg mx-auto">
+
+      <header className="space-y-2 animate-enter text-center">
+        <h2 className="text-xs font-semibold text-secondary/60 uppercase tracking-[0.2em]">{formattedDate}</h2>
+        <h1 className="text-3xl font-[350] tracking-tight text-primary">{getGreeting()}.</h1>
       </header>
 
-      {/* Mood Section */}
-      <section className="bg-surface p-8 rounded-[32px] shadow-soft transition-all duration-500 ease-out hover:shadow-float hover:-translate-y-1 animate-enter-delay">
-        <div className="mb-8">
-            <h3 className="text-xl font-semibold text-primary mb-2">How are you feeling?</h3>
-            <p className="text-secondary text-sm">Reflect on your current state of mind.</p>
+      {/* Mood Section - Clean Glass */}
+      <section className="glass-panel p-8 rounded-[40px] transition-all duration-500 ease-out hover:shadow-float animate-enter-delay">
+        <div className="mb-10 text-center">
+          <h3 className="text-xl font-medium text-primary mb-2">How do you feel?</h3>
+          <p className="text-secondary text-sm font-light">Pause for a moment.</p>
         </div>
-        
-        <div className="flex justify-between items-center px-1">
+
+        <div className="flex justify-between items-center px-2 relative">
+          {/* Connecting Line */}
+          <div className="absolute top-1/2 left-4 right-4 h-0.5 bg-stone-200/50 -z-10"></div>
+
           {[1, 2, 3, 4, 5].map((val) => (
             <button
               key={val}
               onClick={() => setMood(val as MoodRating)}
-              className={`relative w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-300 active:scale-90 ${
-                mood === val 
-                  ? `bg-gradient-to-br ${MOOD_GRADIENTS[val as MoodRating]} text-white shadow-lg scale-110 ring-4 ring-white` 
-                  : 'bg-slate-50 text-slate-400 hover:bg-slate-100 hover:text-slate-500 hover:scale-110'
-              }`}
+              className={`relative w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-500 ${mood === val
+                  ? `bg-gradient-to-br ${MOOD_GRADIENTS[val as MoodRating]} text-white shadow-xl scale-125 ring-4 ring-white`
+                  : 'bg-white text-stone-300 shadow-sm hover:scale-110 hover:text-stone-400'
+                }`}
             >
               {val}
             </button>
           ))}
         </div>
-        <div className="flex justify-between px-2 mt-4 text-[10px] uppercase tracking-widest font-bold text-slate-300">
-            <span>Rough</span>
-            <span>Great</span>
+        <div className="flex justify-between px-4 mt-6 text-[10px] uppercase tracking-widest font-bold text-stone-300">
+          <span>Rough</span>
+          <span>Great</span>
         </div>
       </section>
 
-      {/* Habits Section */}
-      <section className="bg-surface p-8 rounded-[32px] shadow-soft space-y-10 animate-enter-delay transition-all duration-500 ease-out hover:shadow-float hover:-translate-y-1" style={{ animationDelay: '0.2s' }}>
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-1 h-6 bg-gradient-to-b from-indigo-500 to-blue-500 rounded-full"></div>
-          <h3 className="text-xl font-semibold text-primary">Daily Habits</h3>
-        </div>
+      {/* Habits Section - Glass & Soft Controls */}
+      <section className="glass-panel p-8 rounded-[40px] space-y-12 animate-enter-delay transition-all duration-500 ease-out hover:shadow-float" style={{ animationDelay: '0.2s' }}>
 
         {/* Sleep */}
-        <div className="space-y-4 group">
-          <div className="flex justify-between items-end">
-             <div className="flex items-center gap-2 text-primary font-medium">
-                <div className="p-2 bg-indigo-50 text-indigo-600 rounded-full transition-transform group-hover:scale-110">
-                  <Moon size={18} strokeWidth={2.5} /> 
-                </div>
-                <span>Sleep</span>
-             </div>
-             <span className="text-2xl font-semibold tracking-tight text-primary tabular-nums">{sleep} <span className="text-sm text-secondary font-normal">hrs</span></span>
+        <div className="space-y-6 group">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3 text-primary font-medium">
+              <div className="p-2.5 bg-stone-100 text-stone-600 rounded-full">
+                <Moon size={18} strokeWidth={2} />
+              </div>
+              <span>Sleep</span>
+            </div>
+            <span className="text-3xl font-[350] tracking-tighter text-primary tabular-nums">{sleep}<span className="text-sm font-light text-secondary ml-1">h</span></span>
           </div>
-          <div className="relative h-6 flex items-center">
-             <div className="absolute w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                <div 
-                    className="h-full bg-indigo-500 rounded-full opacity-30 transition-all duration-300" 
-                    style={{width: `${(sleep / 12) * 100}%`}}
-                ></div>
-             </div>
-             <input 
-                type="range" 
-                min="3" 
-                max="12" 
-                step="0.5"
-                value={sleep}
-                onChange={(e) => setSleep(parseFloat(e.target.value))}
-                className="w-full absolute z-10 opacity-0 cursor-pointer h-8"
-             />
-             <div 
-                className="absolute h-6 w-6 bg-white shadow-md border border-slate-100 rounded-full pointer-events-none transition-all duration-200 ease-out group-hover:scale-125 group-active:scale-95"
-                style={{left: `calc(${((sleep - 3) / 9) * 100}% - 12px)`}}
-             >
-                <div className="w-1.5 h-1.5 bg-indigo-500 rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-             </div>
+          <div className="relative h-8 flex items-center">
+            <div className="absolute w-full h-1.5 bg-stone-100 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-stone-400 rounded-full opacity-50 transition-all duration-300"
+                style={{ width: `${(sleep / 12) * 100}%` }}
+              ></div>
+            </div>
+            <input
+              type="range"
+              min="3"
+              max="12"
+              step="0.5"
+              value={sleep}
+              onChange={(e) => setSleep(parseFloat(e.target.value))}
+              className="w-full absolute z-10 opacity-0 cursor-pointer h-10"
+            />
+            <div
+              className="absolute h-8 w-8 bg-white shadow-lg border border-stone-100 rounded-full pointer-events-none transition-all duration-300 ease-out flex items-center justify-center"
+              style={{ left: `calc(${((sleep - 3) / 9) * 100}% - 16px)` }}
+            >
+              <div className="w-2 h-2 bg-stone-800 rounded-full"></div>
+            </div>
           </div>
         </div>
 
-        {/* Exercise */}
-        <div className="flex justify-between items-center group cursor-pointer select-none transition-transform duration-200 active:scale-[0.98]" onClick={() => setExercise(!exercise)}>
-          <div className="flex items-center gap-3">
-             <div className={`p-2 rounded-full transition-all duration-300 group-hover:scale-110 ${exercise ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-400'}`}>
-                <Activity size={20} strokeWidth={2.5} />
-             </div>
-             <div className="flex flex-col">
+        {/* Exercise Toggle - Minimal & Tactile */}
+        <div onClick={() => setExercise(!exercise)} className="cursor-pointer group select-none">
+          <div className="flex justify-between items-center bg-stone-50/50 p-2 rounded-[24px] border border-transparent hover:border-stone-100 transition-all duration-300">
+            <div className="flex items-center gap-4 pl-2">
+              <div className={`p-2.5 rounded-full transition-colors duration-500 ${exercise ? 'bg-orange-100 text-orange-500' : 'bg-stone-100 text-stone-400'}`}>
+                <Activity size={20} strokeWidth={2} />
+              </div>
+              <div className="flex flex-col">
                 <span className="font-medium text-primary">Movement</span>
-                <span className="text-xs text-secondary transition-opacity">{exercise ? '30+ mins logged' : 'Tap to log activity'}</span>
-             </div>
+                <span className="text-xs text-secondary transition-opacity">{exercise ? 'Logged' : 'Tap to log'}</span>
+              </div>
+            </div>
+            <div
+              className={`w-16 h-10 rounded-full p-1 transition-colors duration-500 relative ${exercise ? 'bg-stone-800' : 'bg-stone-200'}`}
+            >
+              <div className={`w-8 h-8 bg-white rounded-full shadow-md transition-transform duration-500 cubic-bezier(0.16, 1, 0.3, 1) ${exercise ? 'translate-x-6' : 'translate-x-0'}`} />
+            </div>
           </div>
-          <button 
-             className={`w-14 h-8 rounded-full transition-all duration-300 relative shadow-inner group-hover:shadow-md ${exercise ? 'bg-rose-500' : 'bg-slate-200'}`}
-          >
-            <div className={`absolute top-1 left-1 bg-white w-6 h-6 rounded-full shadow-sm transition-transform duration-300 ${exercise ? 'translate-x-6' : 'translate-x-0'}`} />
-          </button>
         </div>
 
-        {/* Screen Time */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 text-primary font-medium group">
-             <div className="p-2 bg-blue-50 text-blue-600 rounded-full transition-transform group-hover:scale-110">
-                <Smartphone size={18} strokeWidth={2.5} /> 
-             </div>
-             <span>Screen Time</span>
+        {/* Screen Time - Soft Pills */}
+        <div className="space-y-6">
+          <div className="flex items-center gap-3 text-primary font-medium pl-2">
+            <div className="p-2.5 bg-stone-100 text-stone-600 rounded-full">
+              <Smartphone size={18} strokeWidth={2} />
+            </div>
+            <span>Screen Time</span>
           </div>
-          <div className="bg-slate-50 p-1.5 rounded-[20px] flex relative">
-             {SCREEN_TIME_OPTIONS.map((opt) => (
-               <button
-                 key={opt.value}
-                 onClick={() => setScreenTime(opt.value)}
-                 className={`flex-1 py-3 rounded-2xl text-sm font-medium transition-all duration-300 flex flex-col items-center gap-0.5 active:scale-95 ${
-                   screenTime === opt.value
-                     ? 'bg-white text-primary shadow-sm ring-1 ring-black/5 scale-[1.02]'
-                     : 'text-secondary hover:text-primary hover:bg-white/50 hover:scale-105'
-                 }`}
-               >
-                 <span>{opt.label}</span>
-                 <span className="text-[10px] opacity-60 font-normal">{opt.sub}</span>
-               </button>
-             ))}
+          <div className="bg-stone-100/50 p-1.5 rounded-[28px] flex relative gap-1">
+            {SCREEN_TIME_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setScreenTime(opt.value)}
+                className={`flex-1 py-4 rounded-[24px] text-sm font-medium transition-all duration-500 flex flex-col items-center gap-1 ${screenTime === opt.value
+                    ? 'bg-white text-primary shadow-md scale-[1.02]'
+                    : 'text-secondary hover:text-primary hover:bg-white/40'
+                  }`}
+              >
+                <span>{opt.label}</span>
+                {/* <span className="text-[9px] opacity-40 font-bold uppercase tracking-widest">{opt.sub}</span> */}
+              </button>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Submit Button */}
-      <div className="sticky bottom-24 z-10 animate-enter-delay" style={{ animationDelay: '0.3s' }}>
+      <div className="sticky bottom-16 z-20 animate-enter-delay bg-background/0 backdrop-blur-0 py-4" style={{ animationDelay: '0.3s' }}>
         <button
-            onClick={handleSubmit}
-            disabled={!mood || !screenTime}
-            className={`w-full py-5 rounded-[24px] font-bold text-lg flex items-center justify-center gap-3 shadow-float transition-all duration-300 ${
-            mood && screenTime
-                ? 'bg-primary text-white hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-200/50'
-                : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+          onClick={handleSubmit}
+          disabled={!mood || !screenTime}
+          className={`w-full py-5 rounded-[32px] font-medium text-lg flex items-center justify-center gap-3 shadow-xl transition-all duration-500 ${mood && screenTime
+              ? 'bg-stone-900 text-stone-50 hover:scale-[1.02] active:scale-[0.98] shadow-stone-300'
+              : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
         >
-            Log Today <ArrowRight size={20} strokeWidth={3} />
+          <span className="tracking-wide">Log Day</span>
+          {mood && screenTime && <ArrowRight size={18} className="opacity-80" />}
         </button>
       </div>
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowRight, Check, Sparkles, Activity, Moon, Smartphone, ChevronRight } from 'lucide-react';
+import { ArrowRight, Sparkles, Activity, Moon, Smartphone, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Area, AreaChart, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts';
 
@@ -23,11 +23,11 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
         onComplete();
     };
 
-    // Mock Data for Charts
+    // Mock Data for Charts - Warmer Palette
     const habitData = [
-        { name: 'Sleep', consistent: 80, inconsistent: 40, color: '#6366f1' }, // Indigo
-        { name: 'Move', consistent: 65, inconsistent: 30, color: '#f43f5e' },  // Rose
-        { name: 'Screen', consistent: 45, inconsistent: 80, color: '#3b82f6' }, // Blue
+        { name: 'Sleep', consistent: 80, inconsistent: 40, color: '#818CF8' }, // Indigo-400
+        { name: 'Move', consistent: 65, inconsistent: 30, color: '#FB7185' },  // Rose-400
+        { name: 'Screen', consistent: 45, inconsistent: 80, color: '#2DD4BF' }, // Teal-400
     ];
 
     const progressData = [
@@ -41,240 +41,228 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
     ];
 
     return (
-        <div className="min-h-screen bg-[#F5F5F7] flex flex-col items-center justify-center p-6 relative overflow-hidden font-sans text-slate-900">
+        <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 relative overflow-hidden font-sans text-primary">
 
-            {/* Background Ambience */}
+            {/* Background Ambience - Warm & Gentle */}
             <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-teal-50/60 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }}></div>
-                <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-indigo-50/60 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '1s' }}></div>
+                <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-stone-200/50 rounded-full blur-[120px] animate-breathe" style={{ animationDuration: '15s' }}></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-orange-100/40 rounded-full blur-[120px] animate-breathe" style={{ animationDuration: '20s', animationDelay: '2s' }}></div>
             </div>
 
-            <div className="w-full max-w-md z-10 flex flex-col h-full max-h-[800px]">
+            <div className="w-full max-w-md z-10 flex flex-col h-full max-h-[800px] justify-between">
 
-                {/* Progress Bar */}
-                <div className="w-full h-1 bg-slate-200 rounded-full mb-8 overflow-hidden">
-                    <motion.div
-                        className="h-full bg-slate-900"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${(step / totalSteps) * 100}%` }}
-                        transition={{ duration: 0.5 }}
-                    />
+                {/* Header / Progress Dots */}
+                <div className="flex justify-between items-center w-full py-8">
+                    <div className="flex gap-2">
+                        {[...Array(totalSteps)].map((_, i) => (
+                            <div
+                                key={i}
+                                className={`h-1.5 rounded-full transition-all duration-500 ${i + 1 === step ? 'w-8 bg-stone-800' : 'w-1.5 bg-stone-300'}`}
+                            />
+                        ))}
+                    </div>
+                    <button onClick={skipToApp} className="text-secondary text-xs font-medium tracking-widest uppercase hover:text-primary transition-colors">
+                        Skip
+                    </button>
                 </div>
 
-                <section className="flex-1 flex flex-col justify-center relative">
+                <section className="flex-1 flex flex-col justify-center relative min-h-[400px]">
                     <AnimatePresence mode="wait">
 
-                        {/* SCREEN 1: WELCOME */}
+                        {/* SCREEN 1: WELCOME - Pure & Simple */}
                         {step === 1 && (
                             <motion.div
                                 key="step1"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                className="text-center space-y-6"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 1.05 }}
+                                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                                className="text-center space-y-8"
                             >
-                                <div className="w-20 h-20 bg-white rounded-[24px] shadow-soft mx-auto flex items-center justify-center mb-4">
-                                    <Sparkles className="text-emerald-500" size={32} />
+                                <div className="w-24 h-24 bg-white/50 backdrop-blur-md border border-white/60 rounded-[32px] shadow-soft mx-auto flex items-center justify-center mb-6">
+                                    <Sparkles className="text-stone-600" size={32} />
                                 </div>
-                                <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-                                    A calmer way to understand your days
+                                <h1 className="text-4xl font-[350] tracking-tighter text-primary">
+                                    Calm clarity.
                                 </h1>
-                                <p className="text-lg text-slate-500 leading-relaxed max-w-xs mx-auto">
-                                    Track how you feel. Notice what helps. <br />Change one small thing at a time.
+                                <p className="text-xl text-secondary leading-relaxed max-w-xs mx-auto font-light">
+                                    Understand your days without the noise.
                                 </p>
                             </motion.div>
                         )}
 
-                        {/* SCREEN 2: MOOD CHECK VISUAL */}
+                        {/* SCREEN 2: MOOD CHECK - Tactile */}
                         {step === 2 && (
                             <motion.div
                                 key="step2"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
-                                className="flex flex-col items-center space-y-8"
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
+                                className="flex flex-col items-center space-y-12"
                             >
-                                <div className="text-center space-y-2">
-                                    <h2 className="text-2xl font-bold text-slate-900">Check in once a day</h2>
-                                    <p className="text-slate-500">A quick mood rating helps you see patterns.</p>
+                                <div className="text-center space-y-3">
+                                    <h2 className="text-3xl font-[350] tracking-tight">How are you?</h2>
+                                    <p className="text-secondary font-light">Just one tap a day.</p>
                                 </div>
 
-                                {/* Visual Mock of Mood Scale */}
-                                <div className="bg-white p-8 rounded-[32px] shadow-soft w-full max-w-sm flex justify-between items-center relative overflow-hidden">
-                                    {/* Line connecting */}
-                                    <div className="absolute top-1/2 left-8 right-8 h-1 bg-slate-100 -z-10 rounded-full"></div>
-
+                                {/* Floating Mood Bar */}
+                                <div className="bg-white/40 backdrop-blur-xl border border-white/50 p-4 rounded-full shadow-soft-xl flex gap-4 w-auto relative">
                                     {[1, 2, 3, 4, 5].map((val) => (
-                                        <div key={val} className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm transition-all duration-500 ${val === 4 ? 'scale-125 bg-emerald-400 text-white shadow-lg ring-4 ring-emerald-50' : 'bg-slate-100 text-slate-300'}`}>
+                                        <div key={val} className={`w-12 h-12 rounded-full flex items-center justify-center font-medium text-lg transition-all duration-500 cursor-pointer ${val === 4 ? 'scale-110 bg-white shadow-lg text-stone-800' : 'text-stone-400 hover:bg-white/50'}`}>
                                             {val}
                                         </div>
                                     ))}
 
-                                    {/* Hand Cursor Animation */}
+                                    {/* Mock Cursor Interaction */}
                                     <motion.div
-                                        className="absolute"
-                                        initial={{ top: '60%', left: '80%', opacity: 0 }}
-                                        animate={{ top: '50%', left: '68%', opacity: 1 }}
-                                        transition={{ delay: 0.5, duration: 1 }}
+                                        className="absolute w-8 h-8 pointer-events-none"
+                                        initial={{ top: '100%', left: '100%', opacity: 0 }}
+                                        animate={{ top: '40%', left: '72%', opacity: 1 }}
+                                        transition={{ delay: 0.2, duration: 1.5, ease: "circOut" }}
                                     >
-                                        <div className="w-8 h-8 bg-slate-900/10 rounded-full animate-ping absolute"></div>
+                                        <div className="w-4 h-4 bg-stone-800/20 rounded-full blur-[2px]"></div>
                                     </motion.div>
                                 </div>
-                                <p className="text-xs font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full uppercase tracking-wider">Takes 5 Seconds</p>
                             </motion.div>
                         )}
 
-                        {/* SCREEN 3: HABIT CONNECTION */}
+                        {/* SCREEN 3: HABIT CONNECTION - Soft Charts */}
                         {step === 3 && (
                             <motion.div
                                 key="step3"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
                                 className="space-y-8 text-center"
                             >
-                                <div className="space-y-2">
-                                    <h2 className="text-2xl font-bold text-slate-900">Your habits shape how you feel</h2>
-                                    <p className="text-slate-500">We help you spot what supports your better days.</p>
+                                <div className="space-y-3">
+                                    <h2 className="text-3xl font-[350] tracking-tight">Everything connects.</h2>
+                                    <p className="text-secondary font-light">See how sleep & movement shape your mood.</p>
                                 </div>
 
-                                {/* Abstract Bar Chart */}
-                                <div className="bg-white p-6 rounded-[32px] shadow-soft w-full h-64 flex flex-col justify-center">
+                                <div className="bg-white/40 backdrop-blur-xl border border-white/50 p-8 rounded-[40px] shadow-soft-xl w-full h-72 flex flex-col justify-center">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <BarChart data={habitData} barGap={8}>
-                                            <Bar dataKey="consistent" radius={[4, 4, 0, 0]}>
+                                        <BarChart data={habitData} barGap={12}>
+                                            <Bar dataKey="consistent" radius={[6, 6, 6, 6]}>
                                                 {habitData.map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={entry.color} opacity={0.8} />
+                                                    <Cell key={`cell-${index}`} fill={entry.color} opacity={0.9} />
                                                 ))}
                                             </Bar>
-                                            <Bar dataKey="inconsistent" radius={[4, 4, 0, 0]}>
+                                            <Bar dataKey="inconsistent" radius={[6, 6, 6, 6]}>
                                                 {habitData.map((entry, index) => (
                                                     <Cell key={`cell-${index}`} fill={entry.color} opacity={0.2} />
                                                 ))}
                                             </Bar>
                                         </BarChart>
                                     </ResponsiveContainer>
-                                    <div className="flex justify-between px-4 mt-2 text-xs font-bold text-slate-400 uppercase tracking-widest">
-                                        <span>Sleep</span>
-                                        <span>Move</span>
-                                        <span>Screen</span>
-                                    </div>
                                 </div>
                             </motion.div>
                         )}
 
-                        {/* SCREEN 4: PROGRESS VISUAL */}
+                        {/* SCREEN 4: PROGRESS VISUAL - Organic Curves */}
                         {step === 4 && (
                             <motion.div
                                 key="step4"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
                                 className="space-y-8 text-center"
                             >
-                                <div className="space-y-2">
-                                    <h2 className="text-2xl font-bold text-slate-900">Small changes add up</h2>
-                                    <p className="text-slate-500">You’ll start noticing patterns within a week.</p>
+                                <div className="space-y-3">
+                                    <h2 className="text-3xl font-[350] tracking-tight">Waves, not straight lines.</h2>
+                                    <p className="text-secondary font-light">Observe your natural rhythm.</p>
                                 </div>
 
-                                {/* Smooth Area Chart */}
-                                <div className="bg-white p-6 rounded-[32px] shadow-soft w-full h-64 flex flex-col justify-center relative overflow-hidden">
+                                <div className="bg-white/40 backdrop-blur-xl border border-white/50 p-6 rounded-[40px] shadow-soft-xl w-full h-72 flex flex-col justify-center relative overflow-hidden">
                                     <ResponsiveContainer width="100%" height="100%">
                                         <AreaChart data={progressData}>
                                             <defs>
                                                 <linearGradient id="colorMood" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.2} />
+                                                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
                                                     <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                                                 </linearGradient>
                                             </defs>
-                                            <Area type="monotone" dataKey="mood" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorMood)" />
+                                            {/* Smooth Curve */}
+                                            <Area type="monotone" dataKey="mood" stroke="#059669" strokeWidth={3} fillOpacity={1} fill="url(#colorMood)" />
                                         </AreaChart>
                                     </ResponsiveContainer>
 
-                                    {/* Highlight Marker */}
+                                    {/* Glass Floater */}
                                     <motion.div
-                                        className="absolute right-[15%] top-[20%] bg-white p-2 rounded-lg shadow-lg border border-slate-100 flex gap-2 items-center"
-                                        initial={{ scale: 0.8, opacity: 0 }}
-                                        animate={{ scale: 1, opacity: 1 }}
-                                        transition={{ delay: 0.5 }}
+                                        className="absolute right-[20%] top-[30%] bg-white/80 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-white/60 text-xs font-semibold text-emerald-800"
+                                        initial={{ y: 10, opacity: 0 }}
+                                        animate={{ y: 0, opacity: 1 }}
+                                        transition={{ delay: 0.6 }}
                                     >
-                                        <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                                        <span className="text-xs font-bold text-emerald-700">Feeling Great</span>
+                                        Upward trend
                                     </motion.div>
                                 </div>
                             </motion.div>
                         )}
 
-                        {/* SCREEN 5: SUGGESTIONS */}
+                        {/* SCREEN 5: SUGGESTIONS - Gentle Cards */}
                         {step === 5 && (
                             <motion.div
                                 key="step5"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
                                 className="space-y-8 text-center"
                             >
-                                <div className="space-y-2">
-                                    <h2 className="text-2xl font-bold text-slate-900">One gentle nudge at a time</h2>
-                                    <p className="text-slate-500">We suggest small steps based on what actually helps you.</p>
+                                <div className="space-y-3">
+                                    <h2 className="text-3xl font-[350] tracking-tight">Gentle nudges.</h2>
+                                    <p className="text-secondary font-light">Small ideas for better rest.</p>
                                 </div>
 
-                                <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 p-8 rounded-[32px] shadow-xl shadow-indigo-200 text-white text-left relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 p-8 opacity-10">
-                                        <Sparkles size={100} />
-                                    </div>
+                                <div className="bg-gradient-to-br from-stone-800 to-stone-900 p-8 rounded-[36px] shadow-soft-xl text-stone-50 text-left relative overflow-hidden group">
+                                    <div className="absolute top-[-20%] right-[-20%] w-[150px] h-[150px] bg-white/5 rounded-full blur-[40px]"></div>
 
-                                    <div className="relative z-10 space-y-4">
-                                        <div className="flex items-center gap-2 opacity-80">
-                                            <div className="p-1 bg-white/20 rounded-full">
-                                                <Moon size={14} />
-                                            </div>
-                                            <span className="text-xs font-bold uppercase tracking-widest">Rest & Recovery</span>
+                                    <div className="relative z-10 space-y-6">
+                                        <div className="flex items-center gap-2 opacity-60">
+                                            <Moon size={16} />
+                                            <span className="text-xs font-bold uppercase tracking-widest">Rest</span>
                                         </div>
-                                        <h3 className="text-2xl font-medium leading-normal">
-                                            "Try winding down screen use 30 minutes before bed today."
+                                        <h3 className="text-2xl font-light leading-snug">
+                                            "Try dimming the lights an hour before sleep."
                                         </h3>
-                                        <div className="flex gap-3 pt-2">
-                                            <div className="h-8 px-4 bg-white text-indigo-600 rounded-full flex items-center text-xs font-bold">
-                                                Okay, I'll try
-                                            </div>
+                                        <div className="h-10 px-5 bg-white/10 backdrop-blur-sm rounded-full inline-flex items-center text-sm font-medium border border-white/5">
+                                            Okay
                                         </div>
                                     </div>
                                 </div>
                             </motion.div>
                         )}
 
-                        {/* SCREEN 6: PERSONALIZATION */}
+                        {/* SCREEN 6: PERSONALIZATION - Clean List */}
                         {step === 6 && (
                             <motion.div
                                 key="step6"
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: -20 }}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -20 }}
                                 className="space-y-8 text-center"
                             >
-                                <div className="space-y-2">
-                                    <h2 className="text-2xl font-bold text-slate-900">What would you like to focus on first?</h2>
-                                    <p className="text-slate-500">You can change this anytime.</p>
+                                <div className="space-y-3">
+                                    <h2 className="text-3xl font-[350] tracking-tight">Where to start?</h2>
+                                    <p className="text-secondary font-light">Choose a focus.</p>
                                 </div>
 
-                                <div className="grid grid-cols-1 gap-4">
+                                <div className="grid grid-cols-1 gap-3">
                                     {[
-                                        { icon: Moon, label: "Better Sleep" },
-                                        { icon: Activity, label: "More Energy" },
-                                        { icon: Smartphone, label: "Screen Balance" },
-                                        { icon: Sparkles, label: "Mood Clarity" },
+                                        { icon: Moon, label: "Deep Sleep" },
+                                        { icon: Activity, label: "Energy & Mood" },
+                                        { icon: Smartphone, label: "Digital Balance" },
+                                        { icon: Sparkles, label: "Peace of Mind" },
                                     ].map((item, idx) => (
                                         <button
                                             key={idx}
                                             onClick={onComplete}
-                                            className="flex items-center gap-4 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-emerald-200 hover:bg-emerald-50/50 transition-all group text-left"
+                                            className="flex items-center gap-4 p-5 bg-white/40 border border-white/60 hover:bg-white/80 rounded-[24px] shadow-sm hover:shadow-soft transition-all group text-left backdrop-blur-sm"
                                         >
-                                            <div className="w-10 h-10 rounded-full bg-slate-50 text-slate-400 group-hover:bg-emerald-100 group-hover:text-emerald-600 flex items-center justify-center transition-colors">
-                                                <item.icon size={20} />
+                                            <div className="w-10 h-10 rounded-full bg-white text-stone-400 group-hover:text-stone-800 flex items-center justify-center transition-colors shadow-sm">
+                                                <item.icon size={18} />
                                             </div>
-                                            <span className="font-semibold text-slate-700 group-hover:text-emerald-800">{item.label}</span>
-                                            <ChevronRight className="ml-auto text-slate-300 group-hover:text-emerald-400" size={20} />
+                                            <span className="font-medium text-primary text-lg">{item.label}</span>
                                         </button>
                                     ))}
                                 </div>
@@ -284,21 +272,15 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) => {
                     </AnimatePresence>
                 </section>
 
-                {/* CONTROLS */}
-                <div className="py-8 flex flex-col gap-4">
+                {/* Footer Controls */}
+                <div className="pt-8 pb-4">
                     <button
                         onClick={nextStep}
-                        className="w-full py-4 bg-slate-900 text-white rounded-[24px] font-bold text-lg shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                        className="w-full py-5 bg-stone-900 text-stone-50 rounded-[28px] font-medium text-lg shadow-soft hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-3"
                     >
-                        {step === 6 ? 'Start Tracking' : 'Continue'}
-                        {step !== 6 && <ArrowRight size={20} />}
+                        <span>{step === 6 ? 'Create Account' : 'Continue'}</span>
+                        {step !== 6 && <ArrowRight size={18} opacity={0.8} />}
                     </button>
-
-                    {step < 5 && (
-                        <button onClick={skipToApp} className="text-slate-400 text-sm font-medium hover:text-slate-600 transition-colors">
-                            Skip Intro
-                        </button>
-                    )}
                 </div>
 
             </div>

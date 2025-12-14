@@ -1,46 +1,61 @@
 import React from 'react';
 import { SignInButton } from '@clerk/clerk-react';
 
-const LandingPage: React.FC = () => {
+interface LandingPageProps {
+  onStartOnboarding: () => void;
+}
+
+const LandingPage: React.FC<LandingPageProps> = ({ onStartOnboarding }) => {
   return (
-    <div className="min-h-screen font-sans text-primary flex flex-col justify-center items-center antialiased relative overflow-hidden bg-[#F5F5F7]">
-      
-      {/* Background Layers - reused from main app for consistency */}
+    <div className="min-h-screen font-sans text-primary flex flex-col justify-center items-center antialiased relative overflow-hidden bg-background">
+
+      {/* Background Layers - Breathing & Organic */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <div 
-          className="absolute top-[-25%] left-[-20%] w-[80%] h-[70%] bg-teal-50/80 rounded-full blur-[160px] opacity-70 animate-float" 
-          style={{ animationDuration: '18s' }} 
+        <div
+          className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-stone-200/40 rounded-full blur-[120px] opacity-60 animate-breathe"
+          style={{ animationDuration: '12s' }}
         />
-        <div 
-          className="absolute bottom-[-20%] right-[-20%] w-[70%] h-[60%] bg-emerald-50/80 rounded-full blur-[140px] opacity-70 animate-float" 
-          style={{ animationDuration: '24s', animationDelay: '-5s' }} 
+        <div
+          className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-stone-300/30 rounded-full blur-[100px] opacity-60 animate-breathe"
+          style={{ animationDuration: '16s', animationDelay: '-5s' }}
         />
       </div>
 
       <div className="z-10 flex flex-col items-center text-center p-8 max-w-md w-full animate-enter">
-        <div className="w-24 h-24 bg-white rounded-[32px] shadow-soft mb-8 flex items-center justify-center">
-            {/* Logo placeholder - Heart/Pulse icon */}
-            <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-600">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
-                </svg>
-            </div>
+
+        {/* Minimalist Logo Area */}
+        <div className="mb-12 relative group cursor-default">
+          <div className="absolute inset-0 bg-stone-400/20 blur-2xl rounded-full scale-110 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+          <div className="w-24 h-24 rounded-full bg-white/40 backdrop-blur-md border border-white/50 flex items-center justify-center shadow-soft relative z-10">
+            <div className="w-3 h-3 bg-stone-800 rounded-full shadow-glow animate-pulse"></div>
+          </div>
         </div>
-        
-        <h1 className="text-4xl font-bold mb-4 tracking-tight text-slate-900">Pulse</h1>
-        <p className="text-xl text-slate-500 mb-12 leading-relaxed">
-          Understand how your habits influence your well-being, without the pressure.
+
+        {/* Typography - Massive & Elegant */}
+        <h1 className="text-6xl font-[350] mb-6 tracking-tighter text-primary">
+          pulse
+        </h1>
+        <p className="text-xl text-secondary mb-16 leading-relaxed max-w-[280px] mx-auto font-light">
+          A quieter way to understand your days.
         </p>
 
-        <SignInButton mode="modal">
-            <button className="bg-slate-900/90 hover:bg-slate-900 text-white font-medium py-4 px-12 rounded-full shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-300 w-full text-lg">
-                Get Started
+        {/* Primary Action - Soft Glass Button */}
+        <button
+          onClick={onStartOnboarding}
+          className="group relative px-8 py-4 bg-stone-900 text-stone-50 rounded-full shadow-soft-xl hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all duration-500 w-full max-w-[200px]"
+        >
+          <span className="relative z-10 text-lg font-medium tracking-wide">Begin</span>
+          <div className="absolute inset-0 rounded-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        </button>
+
+        {/* Secondary Action - Minimal Text Link */}
+        <div className="mt-8">
+          <SignInButton mode="modal">
+            <button className="text-stone-400 hover:text-stone-600 font-medium text-xs tracking-widest uppercase transition-colors duration-300">
+              Log In
             </button>
-        </SignInButton>
-
-        <p className="mt-8 text-sm text-slate-400">
-            Private • Secure • Local
-        </p>
+          </SignInButton>
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ClerkProvider, SignedIn, SignedOut, UserButton, useUser, SignInButton } from '@clerk/clerk-react';
+import { ClerkProvider, SignedIn, SignedOut, UserButton, useUser, useClerk } from '@clerk/clerk-react';
 import { View, DailyEntry } from './types';
 import { saveEntry, seedDataIfEmpty, getEntries, checkOnboardingStatus, completeOnboarding } from './services/storageService';
 import { INITIAL_SUGGESTION_ID } from './constants';
@@ -15,24 +15,39 @@ if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key")
 }
 
+// === GUEST VIEW (Pre-Auth) ===
+const GuestView: React.FC = () => {
+  const { openSignUp } = useClerk();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  const handleOnboardingComplete = () => {
+    // Once onboarding is done, trigger Sign Up
+    openSignUp();
+  };
+
+  if (showOnboarding) {
+    return <OnboardingFlow onComplete={handleOnboardingComplete} />;
+  }
+
+  return <LandingPage onStartOnboarding={() => setShowOnboarding(true)} />;
+};
+
+// === AUTHENTICATED VIEW ===
 const AppContent: React.FC = () => {
   const { user } = useUser();
   const [currentView, setCurrentView] = useState<View>('dashboard');
   const [entries, setEntries] = useState<DailyEntry[]>([]);
   const [suggestionId, setSuggestionId] = useState(INITIAL_SUGGESTION_ID);
-  const [hasOnboarded, setHasOnboarded] = useState<boolean>(true); // Default true to avoid flash
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
-      // Check onboarding status
-      const onboarded = checkOnboardingStatus(user.id);
-      setHasOnboarded(onboarded);
+      // Mark as onboarded mostly for legacy/cleanup, 
+      // but the main flow relies on them being signed in now.
+      completeOnboarding(user.id);
 
       // Seed or load data specific to this user
       const data = seedDataIfEmpty(user.id);
       setEntries(data);
-      setLoading(false);
     }
   }, [user]);
 
@@ -49,50 +64,34 @@ const AppContent: React.FC = () => {
     setSuggestionId(finalId);
   };
 
-  const handleOnboardingComplete = () => {
-    if (user) {
-      completeOnboarding(user.id);
-      setHasOnboarded(true);
-    }
-  };
-
-  if (loading) return null; // Or a subtle spinner
-
-  if (!hasOnboarded) {
-    return <OnboardingFlow onComplete={handleOnboardingComplete} />;
-  }
-
   return (
-    <div className="min-h-screen font-sans text-primary flex justify-center antialiased selection:bg-emerald-100/50">
+    <div className="min-h-screen font-sans text-primary flex justify-center antialiased bg-background selection:bg-stone-200/50">
 
-      {/* Parallax Background Layers - Softer, cleaner, more fluid */}
+      {/* Parallax Background Layers - Ultra Slow & Organic */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        {/* Soft top-left gradient (Teal/Slate) */}
         <div
-          className="absolute top-[-25%] left-[-20%] w-[80%] h-[70%] bg-teal-50/80 rounded-full blur-[160px] opacity-70 animate-float"
-          style={{ animationDuration: '18s' }}
+          className="absolute top-[-30%] left-[-20%] w-[90%] h-[80%] bg-stone-200/40 rounded-full blur-[180px] opacity-60 animate-float"
+          style={{ animationDuration: '35s' }}
         />
 
-        {/* Soft bottom-right gradient (Emerald/Green) */}
         <div
-          className="absolute bottom-[-20%] right-[-20%] w-[70%] h-[60%] bg-emerald-50/80 rounded-full blur-[140px] opacity-70 animate-float"
-          style={{ animationDuration: '24s', animationDelay: '-5s' }}
+          className="absolute bottom-[-20%] right-[-20%] w-[80%] h-[70%] bg-orange-100/30 rounded-full blur-[160px] opacity-50 animate-float"
+          style={{ animationDuration: '45s', animationDelay: '-10s' }}
         />
 
-        {/* Subtle center-floating accent (Slate/Neutral) for depth */}
         <div
-          className="absolute top-[40%] right-[10%] w-[50%] h-[50%] bg-slate-100/50 rounded-full blur-[150px] opacity-40 animate-float"
-          style={{ animationDuration: '30s', animationDelay: '-12s' }}
+          className="absolute top-[30%] right-[10%] w-[60%] h-[60%] bg-stone-100/30 rounded-full blur-[200px] opacity-30 animate-float"
+          style={{ animationDuration: '60s', animationDelay: '-25s' }}
         />
       </div>
 
-      <div className="w-full max-w-md min-h-screen relative flex flex-col z-10">
+      <div className="w-full max-w-md min-h-screen relative flex flex-col z-10 transition-all duration-1000 ease-in-out">
 
-        {/* User Profile / Logout - Top Right */}
-        <div className="absolute top-6 right-6 z-50">
+        {/* User Profile - Top Right - Minimal */}
+        <div className="absolute top-8 right-8 z-50">
           <UserButton afterSignOutUrl="/" appearance={{
             elements: {
-              avatarBox: "w-10 h-10 ring-2 ring-white shadow-sm"
+              avatarBox: "w-9 h-9 ring-2 ring-white/50 shadow-sm transition-transform hover:scale-105"
             }
           }} />
         </div>
@@ -114,25 +113,26 @@ const AppContent: React.FC = () => {
           )}
         </main>
 
-        {/* Floating Dock Navigation */}
+        {/* Floating Dock Navigation - Glass Pill */}
         <div className="fixed bottom-8 left-0 right-0 flex justify-center z-50 pointer-events-none">
-          <nav className="bg-white/70 backdrop-blur-2xl border border-white/40 px-8 py-4 rounded-[32px] shadow-[0_8px_32px_rgba(0,0,0,0.08)] flex items-center gap-12 pointer-events-auto transition-transform hover:scale-[1.02] duration-300 ring-1 ring-black/5">
+          <nav className="bg-white/70 backdrop-blur-2xl px-10 py-5 rounded-full shadow-soft-xl border border-white/50 flex items-center gap-16 pointer-events-auto transition-all hover:scale-[1.02] duration-500 ring-1 ring-white/60">
             <button
               onClick={() => setCurrentView('dashboard')}
-              className={`relative flex flex-col items-center gap-1 transition-all duration-300 ${currentView === 'dashboard' ? 'text-emerald-600 scale-110' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`relative flex flex-col items-center gap-1 transition-all duration-500 ${currentView === 'dashboard' ? 'text-stone-800 scale-110' : 'text-stone-400 hover:text-stone-600'}`}
             >
-              <Home size={26} strokeWidth={currentView === 'dashboard' ? 2.5 : 2} />
-              {currentView === 'dashboard' && <div className="absolute -bottom-2 w-1 h-1 bg-emerald-600 rounded-full"></div>}
+              <Home size={26} strokeWidth={currentView === 'dashboard' ? 2 : 2} />
+              {currentView === 'dashboard' && <div className="absolute -bottom-3 w-1 h-1 bg-stone-800 rounded-full"></div>}
             </button>
 
-            <div className="w-px h-6 bg-slate-200/50"></div>
+            {/* Divider */}
+            <div className="w-px h-6 bg-stone-300/30"></div>
 
             <button
               onClick={() => setCurrentView('insights')}
-              className={`relative flex flex-col items-center gap-1 transition-all duration-300 ${currentView === 'insights' ? 'text-emerald-600 scale-110' : 'text-slate-400 hover:text-slate-600'}`}
+              className={`relative flex flex-col items-center gap-1 transition-all duration-500 ${currentView === 'insights' ? 'text-stone-800 scale-110' : 'text-stone-400 hover:text-stone-600'}`}
             >
-              <BarChart2 size={26} strokeWidth={currentView === 'insights' ? 2.5 : 2} />
-              {currentView === 'insights' && <div className="absolute -bottom-2 w-1 h-1 bg-emerald-600 rounded-full"></div>}
+              <BarChart2 size={26} strokeWidth={currentView === 'insights' ? 2 : 2} />
+              {currentView === 'insights' && <div className="absolute -bottom-3 w-1 h-1 bg-stone-800 rounded-full"></div>}
             </button>
           </nav>
         </div>
@@ -145,7 +145,7 @@ const App: React.FC = () => {
   return (
     <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
       <SignedOut>
-        <LandingPage />
+        <GuestView />
       </SignedOut>
       <SignedIn>
         <AppContent />
